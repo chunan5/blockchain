@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      network: host
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/tmp
+    ports:
+      - "6969:6969"
+    env_file:
+      - .env
+    command: [ "air", "-c", ".air.toml" ]
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: blockchain
+    ports:
+      - "5432:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+
+volumes:
+  data:
